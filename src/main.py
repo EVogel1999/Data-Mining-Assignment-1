@@ -2,8 +2,7 @@
 import pandas as pd
 import numpy as np
 import matplotlib.pyplot as plt
-import pylab
-import scipy.stats as stats
+from sklearn.linear_model import LinearRegression
 
 hour = pd.read_csv('./data/hour.csv')
 day = pd.read_csv('./data/day.csv')
@@ -114,3 +113,120 @@ skew_inv_sqrt = (3 * (np.mean(inv_sqrt) - np.median(inv_sqrt))) / np.std(inv_sqr
 # -------------------
 # Regression Analysis
 # -------------------
+
+# Data preprocessing -------------------------------------------------------------------------------------------------------
+
+# Standardize the data
+sqrt_cnt = np.sqrt(hour.cnt)
+sqrt_registered = np.sqrt(hour.registered)
+sqrt_casual = np.sqrt(hour.casual)
+
+sdf = pd.DataFrame({ 'cnt': sqrt_cnt, 'casual': sqrt_casual, 'registered': sqrt_registered, 'workingday': hour.workingday })
+
+# Calculate the  normalized value
+sdf.casual = (sdf.casual - sdf.casual.min()) / (sdf.casual.max() - sdf.casual.min())
+sdf.registered = (sdf.registered - sdf.registered.min()) / (sdf.registered.max() - sdf.registered.min())
+sdf.cnt = (sdf.cnt - sdf.cnt.min()) / (sdf.cnt.max() - sdf.cnt.min())
+
+# Analysis -----------------------------------------------------------------------------------------------------------------
+
+weekday = sdf.loc[sdf.workingday == 0]
+weekend = sdf.loc[sdf.workingday == 1]
+
+# 0 - cnt, 1 - casual, 2 - registered, 3 - workingday
+
+# Casual riders on a weekend
+
+X = weekend.iloc[:, 1].values.reshape(-1, 1)
+Y = weekend.iloc[:, 0].values.reshape(-1, 1)
+
+linear_regressor = LinearRegression()
+linear_regressor.fit(X, Y)
+prediction = linear_regressor.predict(X)
+
+plt.scatter(X, Y)
+plt.plot(X, prediction, color='red')
+plt.xlabel('Casual Riders')
+plt.ylabel('Total Count')
+plt.title('Casual Riders on a Weekend')
+plt.show()
+
+# Casual riders on a weekday
+
+X = weekday.iloc[:, 1].values.reshape(-1, 1)
+Y = weekday.iloc[:, 0].values.reshape(-1, 1)
+
+linear_regressor = LinearRegression()
+linear_regressor.fit(X, Y)
+prediction = linear_regressor.predict(X)
+
+plt.scatter(X, Y)
+plt.plot(X, prediction, color='red')
+plt.xlabel('Casual Riders')
+plt.ylabel('Total Count')
+plt.title('Casual Riders on a Weekday')
+plt.show()
+
+# Registered riders on a weekend
+
+X = weekend.iloc[:, 2].values.reshape(-1, 1)
+Y = weekend.iloc[:, 0].values.reshape(-1, 1)
+
+linear_regressor = LinearRegression()
+linear_regressor.fit(X, Y)
+prediction = linear_regressor.predict(X)
+
+plt.scatter(X, Y)
+plt.plot(X, prediction, color='red')
+plt.xlabel('Registered Riders')
+plt.ylabel('Total Count')
+plt.title('Registered Riders on a Weekend')
+plt.show()
+
+# Registered riders on a weekday
+
+X = weekday.iloc[:, 2].values.reshape(-1, 1)
+Y = weekday.iloc[:, 0].values.reshape(-1, 1)
+
+linear_regressor = LinearRegression()
+linear_regressor.fit(X, Y)
+prediction = linear_regressor.predict(X)
+
+plt.scatter(X, Y)
+plt.plot(X, prediction, color='red')
+plt.xlabel('Registered Riders')
+plt.ylabel('Total Count')
+plt.title('Registered Riders on a Weekday')
+plt.show()
+
+# Registered riders to casual riders on a weekend
+
+X = weekend.iloc[:, 2].values.reshape(-1, 1)
+Y = weekend.iloc[:, 1].values.reshape(-1, 1)
+
+linear_regressor = LinearRegression()
+linear_regressor.fit(X, Y)
+prediction = linear_regressor.predict(X)
+
+plt.scatter(X, Y)
+plt.plot(X, prediction, color='red')
+plt.xlabel('Registered Riders')
+plt.ylabel('Casual Riders')
+plt.title('Registered Riders to Casual Riders on a Weekend')
+plt.show()
+
+# Registered riders to casual riders on a weekday
+
+X = weekday.iloc[:, 2].values.reshape(-1, 1)
+Y = weekday.iloc[:, 1].values.reshape(-1, 1)
+
+linear_regressor = LinearRegression()
+linear_regressor.fit(X, Y)
+prediction = linear_regressor.predict(X)
+
+plt.scatter(X, Y)
+plt.plot(X, prediction, color='red')
+plt.xlabel('Registered Riders')
+plt.ylabel('Casual Riders')
+plt.title('Registered Riders to Casual Riders on a Weekday')
+plt.show()
