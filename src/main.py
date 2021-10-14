@@ -18,8 +18,11 @@ print(prop_registered)
 # Plot number of registered vs casual riders
 sum_registered = sum(hour.registered)
 sum_casual = sum(hour.casual)
-ax = plt.figure().add_axes([0, 0, 1, 1])
-ax.bar(['Registered', 'Casual'], [sum_registered, sum_casual])
+df_sum = pd.DataFrame({'labels': ['Registered', 'Casual'], 'data': [sum_registered, sum_casual]})
+ax = df_sum.plot.bar(x='labels', y='data', rot=0)
+ax.set_ylabel('Total Count')
+ax.set_xlabel('Riders')
+ax.set_title('Registered vs Casual Riders')
 plt.show()
 
 # Scatter plot of casual riders on a working day versus weekend/holiday
@@ -29,6 +32,8 @@ hour_working_colored["color"] = hour_working_colored.workingday.apply(lambda x: 
 ax = hour_working_colored.plot.scatter(x=['casual'], y=['registered'], c="color")
 ax.set_xlabel('Casual Riders')
 ax.set_ylabel('Registered Riders')
+ax.set_title('Casual to Registered Riders on a Working vs Non-Working Day')
+ax.legend(['Holiday or Weekend', 'Working Day'])
 plt.show()
 
 # Bar plot of weather to casual and registered riders
@@ -39,9 +44,13 @@ weather_4 = hour.loc[hour['weathersit'] == 4, ['casual', 'registered']]
 
 weather_casual = [sum(weather_1.casual), sum(weather_2.casual), sum(weather_3.casual), sum(weather_4.casual)]
 weather_registered = [sum(weather_1.registered), sum(weather_2.registered), sum(weather_3.registered), sum(weather_4.registered)]
-weather_label = ['Clear', 'Cloudy', 'Light Precipitation', 'Heavy Precipitation']
+weather_label = ['Clear', 'Cloudy', 'Light Precip.', 'Heavy Precip.']
 plt.bar(weather_label, weather_casual, color='r')
 plt.bar(weather_label, weather_registered, bottom=weather_casual, color='b')
+plt.legend(['Casual', 'Registered'])
+plt.xlabel('Weather')
+plt.ylabel('Count')
+plt.title('Count of Riders Given the Weather')
 plt.show()
 
 
@@ -78,13 +87,23 @@ eq_width_hour = hour.copy()
 eq_width_bins = np.linspace(eq_width_hour.registered.min(), eq_width_hour.registered.max(), 4)
 labels = ['low', 'medium', 'high']
 bins = pd.cut(eq_width_hour.registered, bins=eq_width_bins, labels=labels, include_lowest=True)
-plt.hist(bins, bins=3)
+_, _, bars = plt.hist(bins, bins=3)
+i = 0
+for bar in bars:
+    bar.set_facecolor('C' + str(i))
+    i = i + 1
+plt.title('Equal Width Binning of Registered Riders')
 plt.show()
 
 # Frequency binning
 frequency_hour = hour.copy()
 bins = pd.qcut(frequency_hour.registered, q=3, precision=1, labels=labels)
-plt.hist(bins, bins=3)
+_, _, bars = plt.hist(bins, bins=3)
+i = 0
+for bar in bars:
+    bar.set_facecolor('C' + str(i))
+    i = i + 1
+plt.title('Frequency Binning of Registered Riders')
 plt.show()
 
 
