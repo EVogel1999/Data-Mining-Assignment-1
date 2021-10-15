@@ -13,6 +13,7 @@ day = pd.read_csv('./data/day.csv')
 
 # Portion of registered to casual riders
 prop_registered = float(sum(hour.registered) / sum(hour.cnt))
+print('Percentage of registered to casual riders:')
 print(prop_registered)
 
 # Plot number of registered vs casual riders
@@ -44,6 +45,11 @@ weather_4 = hour.loc[hour['weathersit'] == 4, ['casual', 'registered']]
 
 weather_casual = [sum(weather_1.casual), sum(weather_2.casual), sum(weather_3.casual), sum(weather_4.casual)]
 weather_registered = [sum(weather_1.registered), sum(weather_2.registered), sum(weather_3.registered), sum(weather_4.registered)]
+print('\nPercentages of registered riders depending on weather:')
+print(weather_registered[0] / (weather_registered[0] + weather_casual[0]))
+print(weather_registered[1] / (weather_registered[1] + weather_casual[1]))
+print(weather_registered[2] / (weather_registered[2] + weather_casual[2]))
+print(weather_registered[3] / (weather_registered[3] + weather_casual[3]))
 weather_label = ['Clear', 'Cloudy', 'Light Precip.', 'Heavy Precip.']
 plt.bar(weather_label, weather_casual, color='r')
 plt.bar(weather_label, weather_registered, bottom=weather_casual, color='b')
