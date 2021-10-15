@@ -116,22 +116,23 @@ plt.show()
 
 # Find skewed normalizations
 skew_cnt = (3 * (np.mean(hour.cnt) - np.median(hour.cnt))) / np.std(hour.cnt)
-# print(skew_cnt)
+print('\nSkews:')
+print(skew_cnt)
 
 # Natural log transformation
 natlog = np.log(hour.cnt)
 skew_natlog = (3 * (np.mean(natlog) - np.median(natlog))) / np.std(natlog)
-# print(skew_natlog)
+print(skew_natlog)
 
 # Square root transformation
 sqrt = np.sqrt(hour.cnt)
 skew_sqrt = (3 * (np.mean(sqrt) - np.median(sqrt))) / np.std(sqrt)
-# print(skew_sqrt)
+print(skew_sqrt)
 
 # Inverse square root transformation
 inv_sqrt = (1 / np.sqrt(hour.cnt))
 skew_inv_sqrt = (3 * (np.mean(inv_sqrt) - np.median(inv_sqrt))) / np.std(inv_sqrt)
-# print(skew_inv_sqrt)
+print(skew_inv_sqrt)
 
 
 
